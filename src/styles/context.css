@@ -1,0 +1,147 @@
+*,
+*:after,
+*:before {
+	box-sizing: border-box;
+}
+
+:root {
+	--color-bg-primary: #d0d6df;
+	--color-bg-primary-offset: #f1f3f7;
+	--color-bg-secondary: #fff;
+	--color-text-primary: #3a3c42;
+	--color-text-primary-offset: #898c94;
+	--color-orange: #dc9960;
+	--color-green: #1eb8b1;
+	--color-purple: #657cc4;
+	--color-black: var(--color-text-primary);
+	--color-red: #d92027;
+}
+
+body {
+	font-family: "Inter", sans-serif;
+	background-color: var(--color-bg-primary);
+	color: var(--color-text-primary);
+}
+
+.menu {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color-bg-secondary);
+	border-radius: 10px;
+	box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
+	position: absolute;
+	min-width: 250px;
+}
+
+.menu-list {
+	margin: 0;
+	display: block;
+	width: 100%;
+	padding: 8px;
+}
+
+.menu-list+.menu-list {
+	border-top: 1px solid #ddd;
+}
+
+.menu-sub-list {
+	display: none;
+	padding: 8px;
+	background-color: var(--color-bg-secondary);
+	border-radius: 10px;
+	box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
+	position: absolute;
+	left: 100%;
+	right: 0;
+	z-index: 100;
+	width: 100%;
+	top: 0;
+	flex-direction: column;
+}
+
+.menu-sub-list:hover {
+	display: flex;
+}
+
+.menu-item {
+	position: relative;
+	list-style: none;
+}
+
+.with-divider {
+	border-bottom: 1px solid #ddd;
+	width: calc(100% + 16px);
+	margin-left: -8px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.menu span {
+	cursor: pointer;
+	font: inherit;
+	border: 0;
+	padding: 8px 8px;
+	padding-right: 36px;
+	width: 100%;
+	border-radius: 8px;
+	text-align: left;
+	display: flex;
+	align-items: center;
+	position: relative;
+	background-color: var(--color-bg-secondary);
+}
+
+.menu span:hover {
+	background-color: var(--color-bg-primary-offset);
+}
+
+.menu span:hover+.menu-sub-list {
+	display: flex;
+}
+
+.menu span svg {
+	flex-shrink: 0;
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	stroke: var(--color-text-primary-offset);
+}
+
+.menu svg:nth-of-type(2) {
+	margin-right: 0;
+	position: absolute;
+	right: 8px;
+}
+
+.menu-button--delete:hover {
+	color: var(--color-red);
+}
+
+.menu-button--delete:hover svg:first-of-type {
+	stroke: var(--color-red);
+}
+
+.menu-button--orange svg:first-of-type {
+	stroke: var(--color-orange);
+}
+
+.menu-button--green svg:first-of-type {
+	stroke: var(--color-green);
+}
+
+.menu-button--purple svg:first-of-type {
+	stroke: var(--color-purple);
+}
+
+.menu-button--black svg:first-of-type {
+	stroke: var(--color-black);
+}
+
+.menu-button--checked svg:nth-of-type(2) {
+	stroke: var(--color-purple);
+}
+
+.container {
+	width: 100vw;
+	height: 100vh;
+}
