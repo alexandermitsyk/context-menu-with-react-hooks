@@ -2,12 +2,13 @@ import {
     useState,
     useEffect,
     useRef,
-    useLayoutEffect
+    useLayoutEffect,
+    useCallback,
 } from 'react';
 import FeatherIcon from 'feather-icons-react';
 import '../styles/context.css';
 
-const CustomContext = ({ targetId, options, classes }) => {
+const CustomContext = ({ targetId, options, classes, closeOnMenuClick }) => {
     const contextRef= useRef(null);
     const targetNode = useRef(null);
     const [contextData, setContextData]= useState({ 
@@ -15,6 +16,15 @@ const CustomContext = ({ targetId, options, classes }) => {
         posX: 0, 
         posY: 0
     });
+
+    const closeContextMenu = useCallback(() => {
+        setContextData({ 
+            ...contextData, 
+            visible: false 
+        });
+
+        targetNode.current = null;
+    }, [contextData]);
 
     useEffect(() => {
         const contextMenuEventHandler= (event) => {
@@ -31,25 +41,13 @@ const CustomContext = ({ targetId, options, classes }) => {
             
             targetNode.current = event.target;
         } else if (contextRef.current && !contextRef.current.contains(event.target)) {
-            setContextData({ 
-                ...contextData, 
-                visible: false 
-            });
-
-            
-            targetNode.current = null;
+            closeContextMenu();
         }
     }
 
     const offClickHandler= (event) => {
         if (contextRef.current && !contextRef.current.contains(event.target)) {
-                setContextData({ 
-                    ...contextData, 
-                    visible: false 
-                });
-
-                
-                targetNode.current = null;
+                closeContextMenu();
             }
         }
 
@@ -60,7 +58,7 @@ const CustomContext = ({ targetId, options, classes }) => {
             document.removeEventListener('contextmenu', contextMenuEventHandler);
             document.removeEventListener('click', offClickHandler);
         }
-    }, [contextData, targetId]);
+    }, [closeContextMenu, contextData, targetId]);
 
     useLayoutEffect(() => {
         if (contextData.posX + contextRef.current?.offsetWidth > window.innerWidth) {
@@ -78,11 +76,15 @@ const CustomContext = ({ targetId, options, classes }) => {
         }
     }, [contextData]);
 
-    const onclickCallback = (e, option) => {
+    const onclickCallback = useCallback((e, option) => {
         if (typeof option.click === 'function') {
+            if (typeof closeOnMenuClick !== 'undefined' || closeOnMenuClick === true) {
+                closeContextMenu();
+            }
+
             option.click(e, targetNode?.current);
         }
-    }
+    }, [closeContextMenu, closeOnMenuClick]);
 
     return (
         <div ref={contextRef} className='menu' style={{ display:`${contextData.visible ? 'block' : 'none'}`, left: contextData.posX, top: contextData.posY }}>
@@ -91,7 +93,7 @@ const CustomContext = ({ targetId, options, classes }) => {
                     <>
                         <li 
                             onClick={(e) => onclickCallback(e, option) } 
-                            key={`menu-${option.name}-${index}`} 
+                            key={`menu-item-${option.name}-${index}`} 
                             className={`menu-item ${classes?.listItem} ${option.className}`}
                         >
                             <span>
@@ -101,7 +103,7 @@ const CustomContext = ({ targetId, options, classes }) => {
                             </span>
                             {
                                 option.subList 
-                                ?  <ul className="menu-sub-list">
+                                ?  <ul key={`sub-menu-wrapper-${option.name}-${index}`} className="menu-sub-list">
                                         {option.subList.map((subUption, subIndex) => (
                                             <li
                                                 key={`sub-menu-${subUption.name}-${subIndex}`} 

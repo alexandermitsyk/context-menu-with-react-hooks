@@ -93,6 +93,7 @@ const App= () => {
                         listWrapper: 'customContextmenuArea1ListWrapper',
                         listItem: 'customContextmenuArea1ListItem'
                     }}
+                    closeOnMenuClick
                 />
             </div>
         </div>
